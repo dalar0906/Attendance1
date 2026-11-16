@@ -20,4 +20,12 @@ object StudentRepository {
     fun delete(student: Student) {
         students.removeAll { it.id == student.id }
     }
+
+    fun exists(firstName: String, lastName: String, groupName: String): Boolean {
+        return students.any {
+            it.firstName.equals(firstName.trim(), ignoreCase = true) &&
+                    it.lastName.equals(lastName.trim(), ignoreCase = true) &&
+                    it.groupName.equals(groupName.trim(), ignoreCase = true)
+        }
+    }
 }
