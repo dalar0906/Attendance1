@@ -45,7 +45,7 @@ class StudentsActivity : AppCompatActivity() {
 
         // Кнопка Назад
         btnBack.setOnClickListener {
-            finish()   // возвращает на главный экран
+            finish()
         }
 
         // Добавление
@@ -53,10 +53,21 @@ class StudentsActivity : AppCompatActivity() {
             addStudent()
         }
 
-        // Удаление по долгому нажатию
-        lvStudents.setOnItemLongClickListener { _, _, position, _ ->
-            confirmDelete(position)
-            true
+        // ===== УДАЛЕНИЕ =====
+        // Нажали на студента → появляется диалог подтверждения
+        lvStudents.setOnItemClickListener { _, _, position, _ ->
+            val student = studentsCache[position]
+
+            AlertDialog.Builder(this)
+                .setTitle("Удаление студента")
+                .setMessage("Удалить студента:\n${student.lastName} ${student.firstName}\nГруппа: ${student.groupName}?")
+                .setPositiveButton("Удалить") { _, _ ->
+                    StudentRepository.delete(student)
+                    Toast.makeText(this, "Студент удалён", Toast.LENGTH_SHORT).show()
+                    refreshList()
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
         }
 
         refreshList()
@@ -75,27 +86,11 @@ class StudentsActivity : AppCompatActivity() {
         StudentRepository.add(firstName, lastName, group)
         Toast.makeText(this, "Студент добавлен", Toast.LENGTH_SHORT).show()
 
-        // Очищаем поля
         etLastName.text.clear()
         etFirstName.text.clear()
         etGroup.text.clear()
 
         refreshList()
-    }
-
-    private fun confirmDelete(position: Int) {
-        val student = studentsCache[position]
-
-        AlertDialog.Builder(this)
-            .setTitle("Удаление студента")
-            .setMessage("Удалить ${student.lastName} ${student.firstName} (${student.groupName})?")
-            .setPositiveButton("Удалить") { _, _ ->
-                StudentRepository.delete(student)
-                Toast.makeText(this, "Студент удалён", Toast.LENGTH_SHORT).show()
-                refreshList()
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
     }
 
     private fun refreshList() {
@@ -108,7 +103,6 @@ class StudentsActivity : AppCompatActivity() {
         }
         adapter.notifyDataSetChanged()
 
-        // Показываем сообщение, если список пуст
         if (displayList.isEmpty()) {
             tvEmpty.visibility = View.VISIBLE
             lvStudents.visibility = View.GONE
