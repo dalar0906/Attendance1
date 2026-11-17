@@ -6,6 +6,17 @@ object StudentRepository {
 
     fun getAll(): List<Student> = students.toList()
 
+    /** Студенты одной группы, отсортированные по фамилии. */
+    fun getByGroup(groupName: String): List<Student> =
+        students.filter { it.groupName.equals(groupName, ignoreCase = true) }
+            .sortedWith(compareBy({ it.lastName.lowercase() }, { it.firstName.lowercase() }))
+
+    /** Список групп без повторов (без учёта регистра), по алфавиту. */
+    fun getGroups(): List<String> =
+        students.map { it.groupName }
+            .distinctBy { it.lowercase() }
+            .sortedBy { it.lowercase() }
+
     fun add(firstName: String, lastName: String, groupName: String): Student {
         val student = Student(
             id = nextId++,
@@ -19,6 +30,7 @@ object StudentRepository {
 
     fun delete(student: Student) {
         students.removeAll { it.id == student.id }
+        AttendanceRepository.removeForStudent(student.id)
     }
 
     fun exists(firstName: String, lastName: String, groupName: String): Boolean {
