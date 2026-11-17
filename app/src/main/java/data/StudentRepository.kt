@@ -6,6 +6,8 @@ object StudentRepository {
 
     fun getAll(): List<Student> = students.toList()
 
+    fun getById(id: Int): Student? = students.firstOrNull { it.id == id }
+
     /** Студенты одной группы, отсортированные по фамилии. */
     fun getByGroup(groupName: String): List<Student> =
         students.filter { it.groupName.equals(groupName, ignoreCase = true) }

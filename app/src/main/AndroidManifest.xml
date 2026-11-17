@@ -33,6 +33,10 @@
             android:name=".ui.MarkAttendanceActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.StudentAttendanceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.StatisticsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

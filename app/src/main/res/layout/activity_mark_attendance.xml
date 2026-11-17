@@ -51,6 +51,16 @@
         android:textColor="#757575" />
 
     <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="Нажмите на имя студента, чтобы отметить его сразу по нескольким предметам"
+        android:textSize="12sp"
+        android:textColor="#1976D2" />
+
+    <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

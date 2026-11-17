@@ -35,7 +35,7 @@ class AttendanceAdapter(
         val tvName = view.findViewById<TextView>(R.id.tvStudentName)
         val rgStatus = view.findViewById<RadioGroup>(R.id.rgStatus)
 
-        tvName.text = "${student.lastName} ${student.firstName}"
+        tvName.text = "${student.lastName} ${student.firstName}  ›"
 
         // Сначала снимаем слушатель, чтобы programmatic check() не считался действием пользователя
         rgStatus.setOnCheckedChangeListener(null)

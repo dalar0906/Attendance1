@@ -5,14 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.attendancecontrol.R
 import com.example.attendancecontrol.data.StudentRepository
+import com.example.attendancecontrol.data.SubjectRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -25,7 +26,7 @@ class AttendanceActivity : AppCompatActivity() {
 
     private lateinit var spGroup: Spinner
     private lateinit var btnDate: Button
-    private lateinit var etSubject: EditText
+    private lateinit var etSubject: AutoCompleteTextView
     private lateinit var btnOpenList: Button
     private lateinit var tvNoStudents: TextView
 
@@ -48,11 +49,24 @@ class AttendanceActivity : AppCompatActivity() {
         updateDateButton()
         btnDate.setOnClickListener { showDatePicker() }
         btnOpenList.setOnClickListener { openList() }
+
+        // Список сохранённых предметов открывается по нажатию на поле
+        etSubject.setOnClickListener { etSubject.showDropDown() }
+        etSubject.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && SubjectRepository.getAll().isNotEmpty()) etSubject.showDropDown()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         refreshGroups()
+        refreshSubjects()
+    }
+
+    private fun refreshSubjects() {
+        etSubject.setAdapter(
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, SubjectRepository.getAll())
+        )
     }
 
     private fun refreshGroups() {
@@ -99,11 +113,13 @@ class AttendanceActivity : AppCompatActivity() {
             return
         }
 
-        val subject = etSubject.text.toString().trim()
-        if (subject.length < 2) {
-            Toast.makeText(this, "Введите предмет (минимум 2 символа)", Toast.LENGTH_SHORT).show()
+        val rawSubject = etSubject.text.toString()
+        if (!SubjectRepository.isValid(rawSubject)) {
+            Toast.makeText(this, "Введите предмет (2–50 символов)", Toast.LENGTH_SHORT).show()
             return
         }
+        // Предмет попадает в общий список (повторы без учёта регистра объединяются)
+        val subject = SubjectRepository.add(rawSubject)
 
         val intent = Intent(this, MarkAttendanceActivity::class.java).apply {
             putExtra(MarkAttendanceActivity.EXTRA_GROUP, group)

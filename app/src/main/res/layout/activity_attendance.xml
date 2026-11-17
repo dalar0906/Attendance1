@@ -64,11 +64,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/etSubject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Предмет (например, Математика)"
+        android:hint="Предмет (выберите из списка или введите новый)"
+        android:completionThreshold="1"
         android:inputType="textCapSentences"
         android:maxLength="50" />
 

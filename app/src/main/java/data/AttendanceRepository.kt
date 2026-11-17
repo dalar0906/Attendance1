@@ -22,10 +22,35 @@ object AttendanceRepository {
      * (у студента остаётся одна итоговая отметка на занятие).
      */
     fun saveLesson(lessonDate: String, subject: String, marks: Map<Int, String>) {
-        val cleanSubject = subject.trim()
+        val cleanSubject = SubjectRepository.add(subject)
         records.removeAll { isSameLesson(it, lessonDate, cleanSubject) && it.studentId in marks }
         marks.forEach { (studentId, status) ->
             records.add(Attendance(studentId, lessonDate, cleanSubject, status))
+        }
+    }
+
+    /**
+     * Отметки одного студента за дату по всем предметам: предмет -> статус.
+     * Ключи — написание предмета из [SubjectRepository].
+     */
+    fun getStudentStatuses(studentId: Int, lessonDate: String): Map<String, String> {
+        return records
+            .filter { it.studentId == studentId && it.lessonDate == lessonDate }
+            .associate { SubjectRepository.add(it.subject) to it.status }
+    }
+
+    /**
+     * Сохраняет отметки одного студента сразу по нескольким предметам за дату.
+     * По каждому предмету остаётся одна итоговая отметка (прежняя заменяется).
+     */
+    fun saveStudentMarks(studentId: Int, lessonDate: String, marks: Map<String, String>) {
+        marks.forEach { (subject, status) ->
+            val clean = SubjectRepository.add(subject)
+            records.removeAll {
+                it.studentId == studentId && it.lessonDate == lessonDate &&
+                        it.subject.equals(clean, ignoreCase = true)
+            }
+            records.add(Attendance(studentId, lessonDate, clean, status))
         }
     }
 
