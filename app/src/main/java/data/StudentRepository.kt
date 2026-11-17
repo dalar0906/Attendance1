@@ -6,7 +6,7 @@ object StudentRepository {
 
     fun getAll(): List<Student> = students.toList()
 
-    fun getById(id: Int): Student? = students.firstOrNull { it.id == id }
+    fun getById(id: Int): Student? = students.find { it.id == id }
 
     /** Студенты одной группы, отсортированные по фамилии. */
     fun getByGroup(groupName: String): List<Student> =
@@ -34,6 +34,7 @@ object StudentRepository {
         students.removeAll { it.id == student.id }
         AttendanceRepository.removeForStudent(student.id)
     }
+
 
     fun exists(firstName: String, lastName: String, groupName: String): Boolean {
         return students.any {

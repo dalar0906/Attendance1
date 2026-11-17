@@ -1,33 +1,29 @@
 package com.example.attendancecontrol.data
 
-/**
- * Список предметов (в памяти, текущий сеанс).
- * Предмет попадает в список, когда его вводят на экране занятия,
- * добавляют на экране студента или сохраняют по нему отметку.
- * Постоянное хранение (Room) — спринт 4.
- */
 object SubjectRepository {
+
     private val subjects = mutableListOf<String>()
 
-    const val MIN_LENGTH = 2
-    const val MAX_LENGTH = 50
+    fun getAll(): List<String> = subjects.sorted()
 
-    /** Все предметы по алфавиту. */
-    fun getAll(): List<String> = subjects.sortedBy { it.lowercase() }
-
-    fun isValid(name: String): Boolean = normalize(name).length in MIN_LENGTH..MAX_LENGTH
-
-    /**
-     * Добавляет предмет, если его ещё нет (без учёта регистра и лишних пробелов).
-     * Возвращает «официальное» написание предмета из списка.
-     */
-    fun add(name: String): String {
-        val clean = normalize(name)
-        val existing = subjects.firstOrNull { it.equals(clean, ignoreCase = true) }
-        if (existing != null) return existing
-        subjects.add(clean)
-        return clean
+    fun isValid(raw: String): Boolean {
+        val subject = raw.trim()
+        return subject.length in 2..50
     }
 
-    private fun normalize(name: String): String = name.trim().replace(Regex("\\s+"), " ")
+    /**
+     * Добавляет предмет. Если такой уже есть (без учёта регистра) — возвращает существующий.
+     */
+    fun add(raw: String): String {
+        val subject = raw.trim()
+        val existing = subjects.find { it.equals(subject, ignoreCase = true) }
+        if (existing != null) return existing
+
+        subjects.add(subject)
+        return subject
+    }
+
+    fun clear() {
+        subjects.clear()
+    }
 }

@@ -10,15 +10,11 @@ import android.widget.TextView
 import com.example.attendancecontrol.R
 import com.example.attendancecontrol.data.AttendanceStatus
 
-/**
- * Адаптер для экрана студента: строка = предмет, в строке RadioGroup со статусом.
- * Если по предмету ничего не выбрано — отметки нет (в [statuses] нет ключа).
- */
 class SubjectStatusAdapter(
     private val context: Context,
     private val subjects: List<String>,
-    val statuses: MutableMap<String, String>,
-    private val onStatusChanged: () -> Unit
+    val statuses: MutableMap<String, String?>,
+    private val onChanged: () -> Unit
 ) : BaseAdapter() {
 
     override fun getCount(): Int = subjects.size
@@ -30,28 +26,30 @@ class SubjectStatusAdapter(
             ?: LayoutInflater.from(context).inflate(R.layout.item_subject_status, parent, false)
 
         val subject = subjects[position]
-        view.findViewById<TextView>(R.id.tvSubjectName).text = subject
+        val tvName = view.findViewById<TextView>(R.id.tvSubjectName)
         val rgStatus = view.findViewById<RadioGroup>(R.id.rgStatus)
 
+        tvName.text = subject
+
         rgStatus.setOnCheckedChangeListener(null)
+
         when (statuses[subject]) {
             AttendanceStatus.PRESENT -> rgStatus.check(R.id.rbPresent)
             AttendanceStatus.ABSENT -> rgStatus.check(R.id.rbAbsent)
             AttendanceStatus.LATE -> rgStatus.check(R.id.rbLate)
             else -> rgStatus.clearCheck()
         }
+
         rgStatus.setOnCheckedChangeListener { _, checkedId ->
-            val status = when (checkedId) {
+            statuses[subject] = when (checkedId) {
                 R.id.rbPresent -> AttendanceStatus.PRESENT
                 R.id.rbAbsent -> AttendanceStatus.ABSENT
                 R.id.rbLate -> AttendanceStatus.LATE
                 else -> null
             }
-            if (status != null) {
-                statuses[subject] = status
-                onStatusChanged()
-            }
+            onChanged()
         }
+
         return view
     }
 }

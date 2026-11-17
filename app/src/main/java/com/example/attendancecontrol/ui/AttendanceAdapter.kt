@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.RadioGroup
 import android.widget.TextView
 import com.example.attendancecontrol.R
-import com.example.attendancecontrol.data.AttendanceStatus
+import com.example.attendancecontrol.data.AttendanceStatus   // ← вот эту строку добавь
 import com.example.attendancecontrol.data.Student
 
 /**
