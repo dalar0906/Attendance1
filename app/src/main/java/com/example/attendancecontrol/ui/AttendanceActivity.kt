@@ -63,10 +63,16 @@ class AttendanceActivity : AppCompatActivity() {
         refreshSubjects()
     }
 
+    // ИЗМЕНЕНО: сохраняем введённый текст, чтобы он не сбрасывался при обновлении адаптера
     private fun refreshSubjects() {
+        val selected = etSubject.text?.toString().orEmpty()
         etSubject.setAdapter(
             ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, SubjectRepository.getAll())
         )
+        if (selected.isNotBlank()) {
+            etSubject.setText(selected)
+            etSubject.setSelection(selected.length)
+        }
     }
 
     private fun refreshGroups() {

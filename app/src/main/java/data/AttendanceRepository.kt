@@ -54,6 +54,17 @@ object AttendanceRepository {
         }
     }
 
+    // ДОБАВЛЕНО: полная замена всех отметок студента за дату.
+    // Удаляет ВСЕ прежние записи студента за эту дату и записывает только переданные.
+    // Нужно, чтобы предметы, у которых статус снят (null), не «зависали» в хранилище.
+    fun replaceStudentMarks(studentId: Int, lessonDate: String, marks: Map<String, String>) {
+        records.removeAll { it.studentId == studentId && it.lessonDate == lessonDate }
+        marks.forEach { (subject, status) ->
+            val clean = SubjectRepository.add(subject)
+            records.add(Attendance(studentId, lessonDate, clean, status))
+        }
+    }
+
     /** Удаляет отметки студента (вызывается при удалении студента). */
     fun removeForStudent(studentId: Int) {
         records.removeAll { it.studentId == studentId }

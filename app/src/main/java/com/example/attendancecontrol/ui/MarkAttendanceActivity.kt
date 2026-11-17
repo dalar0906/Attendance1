@@ -57,7 +57,6 @@ class MarkAttendanceActivity : AppCompatActivity() {
 
         val tvLessonInfo = findViewById<TextView>(R.id.tvLessonInfo)
         tvSummary = findViewById(R.id.tvSummary)
-        val tvHint = findViewById<TextView>(R.id.tvHint)
         val tvEmpty = findViewById<TextView>(R.id.tvEmpty)
         val lvAttendance = findViewById<ListView>(R.id.lvAttendance)
         btnSave = findViewById(R.id.btnSave)
@@ -72,7 +71,6 @@ class MarkAttendanceActivity : AppCompatActivity() {
             lvAttendance.visibility = View.GONE
             btnSave.isEnabled = false
             tvSummary.visibility = View.GONE
-            tvHint.visibility = View.GONE
         } else {
             // По умолчанию «Присутствовал»; если занятие уже отмечали — подставляем сохранённое
             val previous = AttendanceRepository.getStatuses(date, subject)

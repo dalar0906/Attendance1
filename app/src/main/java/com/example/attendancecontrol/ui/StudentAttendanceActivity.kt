@@ -90,6 +90,31 @@ class StudentAttendanceActivity : AppCompatActivity() {
         refreshEmpty()
     }
 
+    // ДОБАВЛЕНО: при возврате на экран подтягиваем предметы, добавленные на других экранах
+    override fun onResume() {
+        super.onResume()
+        if (studentId == -1) return
+        syncSubjects()
+    }
+
+    // ДОБАВЛЕНО: синхронизация локального списка предметов с SubjectRepository
+    private fun syncSubjects() {
+        val all = SubjectRepository.getAll()
+        var changed = false
+        all.forEach { subject ->
+            if (subjects.none { it.equals(subject, ignoreCase = true) }) {
+                subjects.add(subject)
+                statuses[subject] = null
+                changed = true
+            }
+        }
+        if (changed) {
+            adapter.notifyDataSetChanged()
+            refreshEmpty()
+            loadExistingStatuses()
+        }
+    }
+
     private fun updateDateButton() {
         btnDate.text = "Дата: ${dateFormat.format(calendar.time)}"
     }
@@ -159,8 +184,9 @@ class StudentAttendanceActivity : AppCompatActivity() {
             return
         }
 
-        // Сохраняем сразу несколько предметов
-        AttendanceRepository.saveStudentMarks(studentId, date, marks)
+        // ИЗМЕНЕНО: полная замена отметок студента за дату.
+        // Старые записи по предметам, у которых статус снят, будут удалены.
+        AttendanceRepository.replaceStudentMarks(studentId, date, marks)
 
         val savedKeys = ArrayList(marks.keys.map { "$date|$it" })
 
