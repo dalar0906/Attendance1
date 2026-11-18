@@ -1,29 +1,34 @@
 package com.example.attendancecontrol.data
 
+import com.example.attendancecontrol.AttendanceControlApp
+
+import java.util.Locale
+
+/** Справочник предметов также сохраняется между запусками приложения. */
 object SubjectRepository {
+    private val dao get() = AttendanceControlApp.database.subjectDao()
 
-    private val subjects = mutableListOf<String>()
-
-    fun getAll(): List<String> = subjects.sorted()
+    fun getAll(): List<String> = dao.getAll()
 
     fun isValid(raw: String): Boolean {
         val subject = raw.trim()
         return subject.length in 2..50
     }
 
-    /**
-     * Добавляет предмет. Если такой уже есть (без учёта регистра) — возвращает существующий.
-     */
+    /** Добавляет предмет; дубликаты без учёта регистра возвращают исходное написание. */
     fun add(raw: String): String {
-        val subject = raw.trim()
-        val existing = subjects.find { it.equals(subject, ignoreCase = true) }
+        val displayName = raw.trim()
+        val normalized = displayName.lowercase(Locale.ROOT)
+
+        val existing = dao.getByNormalizedName(normalized)
         if (existing != null) return existing
 
-        subjects.add(subject)
-        return subject
+        dao.insert(SubjectRoomEntity(normalized, displayName))
+        return dao.getByNormalizedName(normalized) ?: displayName
     }
 
     fun clear() {
-        subjects.clear()
+        // Намеренно не очищаем постоянный справочник при обычной работе приложения.
+        // Метод оставлен для совместимости с прежним API.
     }
 }

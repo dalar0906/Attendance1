@@ -1,75 +1,67 @@
 package com.example.attendancecontrol.data
 
+import com.example.attendancecontrol.AttendanceControlApp
 /**
- * Хранилище отметок посещаемости в памяти (текущий сеанс).
- * Правило: одна итоговая отметка на студента и занятие (дата + предмет).
- * Постоянное хранение (Room) — спринт 4.
+ * Постоянное хранилище отметок через Room.
+ * Сохраняется правило: одна итоговая отметка на студента, дату и предмет.
  */
 object AttendanceRepository {
-    private val records = mutableListOf<Attendance>()
+    private val database get() = AttendanceControlApp.database
+    private val dao get() = database.attendanceDao()
 
-    fun getAll(): List<Attendance> = records.toList()
+    fun getAll(): List<Attendance> = dao.getAll().map { it.toAttendance() }
 
-    /** Ранее сохранённые статусы студентов для данного занятия: studentId -> статус. */
-    fun getStatuses(lessonDate: String, subject: String): Map<Int, String> {
-        return records
-            .filter { isSameLesson(it, lessonDate, subject) }
-            .associate { it.studentId to it.status }
-    }
+    fun getStatuses(lessonDate: String, subject: String): Map<Int, String> =
+        dao.getForLesson(lessonDate, subject).associate { it.studentId to it.status }
 
-    /**
-     * Сохраняет отметки занятия. Повторное сохранение заменяет прежние отметки
-     * (у студента остаётся одна итоговая отметка на занятие).
-     */
     fun saveLesson(lessonDate: String, subject: String, marks: Map<Int, String>) {
         val cleanSubject = SubjectRepository.add(subject)
-        records.removeAll { isSameLesson(it, lessonDate, cleanSubject) && it.studentId in marks }
-        marks.forEach { (studentId, status) ->
-            records.add(Attendance(studentId, lessonDate, cleanSubject, status))
+        if (marks.isEmpty()) return
+
+        val records = marks.map { (studentId, status) ->
+            AttendanceRoomEntity(studentId, lessonDate, cleanSubject, status)
+        }
+
+        database.runInTransaction {
+            dao.deleteForLessonStudents(lessonDate, cleanSubject, marks.keys.toList())
+            dao.insertAll(records)
         }
     }
 
-    /**
-     * Отметки одного студента за дату по всем предметам: предмет -> статус.
-     * Ключи — написание предмета из [SubjectRepository].
-     */
-    fun getStudentStatuses(studentId: Int, lessonDate: String): Map<String, String> {
-        return records
-            .filter { it.studentId == studentId && it.lessonDate == lessonDate }
+    fun getStudentStatuses(studentId: Int, lessonDate: String): Map<String, String> =
+        dao.getForStudentAndDate(studentId, lessonDate)
             .associate { SubjectRepository.add(it.subject) to it.status }
-    }
 
-    /**
-     * Сохраняет отметки одного студента сразу по нескольким предметам за дату.
-     * По каждому предмету остаётся одна итоговая отметка (прежняя заменяется).
-     */
     fun saveStudentMarks(studentId: Int, lessonDate: String, marks: Map<String, String>) {
-        marks.forEach { (subject, status) ->
-            val clean = SubjectRepository.add(subject)
-            records.removeAll {
-                it.studentId == studentId && it.lessonDate == lessonDate &&
-                        it.subject.equals(clean, ignoreCase = true)
+        if (marks.isEmpty()) return
+        database.runInTransaction {
+            marks.forEach { (subject, status) ->
+                val clean = SubjectRepository.add(subject)
+                dao.deleteForStudentDateSubject(studentId, lessonDate, clean)
+                dao.insertAll(
+                    listOf(AttendanceRoomEntity(studentId, lessonDate, clean, status))
+                )
             }
-            records.add(Attendance(studentId, lessonDate, clean, status))
         }
     }
 
-    // ДОБАВЛЕНО: полная замена всех отметок студента за дату.
-    // Удаляет ВСЕ прежние записи студента за эту дату и записывает только переданные.
-    // Нужно, чтобы предметы, у которых статус снят (null), не «зависали» в хранилище.
+    /** Полная замена всех отметок студента за выбранную дату. */
     fun replaceStudentMarks(studentId: Int, lessonDate: String, marks: Map<String, String>) {
-        records.removeAll { it.studentId == studentId && it.lessonDate == lessonDate }
-        marks.forEach { (subject, status) ->
+        val records = marks.map { (subject, status) ->
             val clean = SubjectRepository.add(subject)
-            records.add(Attendance(studentId, lessonDate, clean, status))
+            AttendanceRoomEntity(studentId, lessonDate, clean, status)
+        }
+
+        database.runInTransaction {
+            dao.deleteForStudentAndDate(studentId, lessonDate)
+            if (records.isNotEmpty()) dao.insertAll(records)
         }
     }
 
-    /** Удаляет отметки студента (вызывается при удалении студента). */
     fun removeForStudent(studentId: Int) {
-        records.removeAll { it.studentId == studentId }
+        dao.deleteForStudent(studentId)
     }
 
-    private fun isSameLesson(a: Attendance, lessonDate: String, subject: String): Boolean =
-        a.lessonDate == lessonDate && a.subject.equals(subject.trim(), ignoreCase = true)
+    private fun AttendanceRoomEntity.toAttendance() =
+        Attendance(studentId = studentId, lessonDate = lessonDate, subject = subject, status = status)
 }

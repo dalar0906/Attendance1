@@ -1,46 +1,51 @@
 package com.example.attendancecontrol.data
 
+import com.example.attendancecontrol.AttendanceControlApp
+
+/**
+ * Сохраняет прежний интерфейс Sprint 1–3, но вместо MutableList использует Room.
+ * Поэтому существующие Activity можно не переписывать.
+ */
 object StudentRepository {
-    private val students = mutableListOf<Student>()
-    private var nextId = 1
+    private val dao get() = AttendanceControlApp.database.studentDao()
 
-    fun getAll(): List<Student> = students.toList()
+    fun getAll(): List<Student> = dao.getAll().map { it.toStudent() }
 
-    fun getById(id: Int): Student? = students.find { it.id == id }
+    fun getById(id: Int): Student? = dao.getById(id)?.toStudent()
 
-    /** Студенты одной группы, отсортированные по фамилии. */
     fun getByGroup(groupName: String): List<Student> =
-        students.filter { it.groupName.equals(groupName, ignoreCase = true) }
-            .sortedWith(compareBy({ it.lastName.lowercase() }, { it.firstName.lowercase() }))
+        dao.getByGroup(groupName).map { it.toStudent() }
 
-    /** Список групп без повторов (без учёта регистра), по алфавиту. */
-    fun getGroups(): List<String> =
-        students.map { it.groupName }
-            .distinctBy { it.lowercase() }
-            .sortedBy { it.lowercase() }
+    fun getGroups(): List<String> = dao.getGroups()
 
     fun add(firstName: String, lastName: String, groupName: String): Student {
-        val student = Student(
-            id = nextId++,
-            firstName = firstName.trim(),
-            lastName = lastName.trim(),
-            groupName = groupName.trim()
-        )
-        students.add(student)
-        return student
+        val cleanFirst = firstName.trim()
+        val cleanLast = lastName.trim()
+        val cleanGroup = groupName.trim()
+
+        val existing = getAll().firstOrNull {
+            it.firstName.equals(cleanFirst, true) &&
+                    it.lastName.equals(cleanLast, true) &&
+                    it.groupName.equals(cleanGroup, true)
+        }
+        if (existing != null) return existing
+
+        val id = dao.insert(
+            StudentRoomEntity(0, cleanFirst, cleanLast, cleanGroup)
+        ).toInt()
+
+        return getById(id)
+            ?: throw IllegalStateException("Не удалось сохранить студента")
     }
 
     fun delete(student: Student) {
-        students.removeAll { it.id == student.id }
-        AttendanceRepository.removeForStudent(student.id)
+        // Внешний ключ Room удалит связанные отметки автоматически.
+        dao.deleteById(student.id)
     }
 
+    fun exists(firstName: String, lastName: String, groupName: String): Boolean =
+        dao.exists(firstName.trim(), lastName.trim(), groupName.trim())
 
-    fun exists(firstName: String, lastName: String, groupName: String): Boolean {
-        return students.any {
-            it.firstName.equals(firstName.trim(), ignoreCase = true) &&
-                    it.lastName.equals(lastName.trim(), ignoreCase = true) &&
-                    it.groupName.equals(groupName.trim(), ignoreCase = true)
-        }
-    }
+    private fun StudentRoomEntity.toStudent() =
+        Student(id = id, firstName = firstName, lastName = lastName, groupName = groupName)
 }
