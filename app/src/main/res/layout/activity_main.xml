@@ -4,53 +4,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="24dp"
-    android:background="#F5F5F5">
+    android:paddingStart="28dp"
+    android:paddingEnd="28dp"
+    android:paddingTop="32dp"
+    android:paddingBottom="32dp"
+    android:background="@color/page_background">
 
-    <!-- Название приложения -->
     <TextView
         android:id="@+id/tvAppTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Система контроля посещаемости"
-        android:textSize="22sp"
+        android:textSize="25sp"
+        android:lineSpacingExtra="2dp"
         android:textStyle="bold"
-        android:textColor="#212121"
+        android:textColor="@color/text_primary"
         android:gravity="center"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="10dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="для преподавателя колледжа"
-        android:textSize="14sp"
-        android:textColor="#757575"
-        android:layout_marginBottom="48dp" />
+        android:textSize="16sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        android:layout_marginBottom="34dp" />
 
-    <!-- Кнопка Студенты -->
     <Button
         android:id="@+id/btnStudents"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="12dp"
         android:text="Студенты"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/primary_blue"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
 
-    <!-- Кнопка Отметить посещаемость -->
     <Button
         android:id="@+id/btnAttendance"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="12dp"
         android:text="Отметить посещаемость"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/primary_blue"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
 
-    <!-- Кнопка Статистика -->
     <Button
         android:id="@+id/btnStatistics"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="54dp"
         android:text="Статистика"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textColor="@color/primary_blue"
+        android:backgroundTint="@color/accent_blue_light"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
 
 </LinearLayout>

@@ -1,83 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <!-- Заголовок + кнопка Назад -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
-
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← Назад" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Занятие"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:gravity="center" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvNoStudents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Нет студентов. Сначала добавьте студентов в разделе «Студенты»."
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="#B71C1C"
-        android:visibility="gone" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Группа"
-        android:textColor="#757575" />
-
-    <Spinner
-        android:id="@+id/spGroup"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="12dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Дата занятия"
-        android:textColor="#757575" />
-
-    <Button
-        android:id="@+id/btnDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp" />
-
-    <AutoCompleteTextView
-        android:id="@+id/etSubject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Предмет (выберите из списка или введите новый)"
-        android:completionThreshold="1"
-        android:inputType="textCapSentences"
-        android:maxLength="50" />
-
-    <Button
-        android:id="@+id/btnOpenList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Открыть список студентов" />
-
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:background="@drawable/bg_page">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="14dp">
+   <Button android:id="@+id/btnBack" android:layout_width="wrap_content" android:layout_height="44dp" android:text="← Назад" android:textAllCaps="false" android:textColor="@color/primary_blue" android:backgroundTint="@color/accent_blue_light"/>
+   <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Занятие" android:textSize="22sp" android:textStyle="bold" android:textColor="@color/text_primary" android:gravity="center"/>
+  </LinearLayout>
+  <TextView android:id="@+id/tvNoStudents" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Нет студентов. Сначала добавьте студентов в разделе «Студенты»." android:gravity="center" android:padding="16dp" android:textColor="@color/status_absent" android:visibility="gone"/>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:background="@drawable/bg_card">
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Группа" android:textColor="@color/text_secondary"/>
+   <Spinner android:id="@+id/spGroup" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginBottom="12dp" android:background="@drawable/bg_input"/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Дата занятия" android:textColor="@color/text_secondary"/>
+   <Button android:id="@+id/btnDate" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="6dp" android:layout_marginBottom="12dp" android:textAllCaps="false" android:textColor="@color/primary_blue" android:backgroundTint="@color/accent_blue_light"/>
+   <AutoCompleteTextView android:id="@+id/etSubject" android:layout_width="match_parent" android:layout_height="54dp" android:hint="Предмет (выберите или введите)" android:completionThreshold="1" android:inputType="textCapSentences" android:maxLength="50" android:paddingStart="12dp" android:background="@drawable/bg_input"/>
+   <Button android:id="@+id/btnOpenList" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="18dp" android:text="Открыть список студентов" android:textAllCaps="false" android:textColor="@color/white" android:backgroundTint="@color/primary_blue"/>
+  </LinearLayout>
+ </LinearLayout>
+</ScrollView>

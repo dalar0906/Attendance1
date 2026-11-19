@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+<color name="black">#FF000000</color><color name="white">#FFFFFFFF</color>
+<color name="page_background">#F3F6FA</color><color name="surface_white">#FFFFFFFF</color>
+<color name="primary_blue">#3569B7</color><color name="accent_blue_light">#E8F0FC</color>
+<color name="text_primary">#243247</color><color name="text_secondary">#718096</color>
+<color name="divider_soft">#E1E8F0</color><color name="status_present">#2E8B62</color>
+<color name="status_absent">#C65B5B</color><color name="status_late">#B47A27</color>
 </resources>

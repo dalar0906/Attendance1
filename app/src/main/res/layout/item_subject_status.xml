@@ -1,48 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
-
-    <TextView
-        android:id="@+id/tvSubjectName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:textColor="#212121" />
-
-    <RadioGroup
-        android:id="@+id/rgStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/rbPresent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Присутствовал"
-            android:textSize="12sp" />
-
-        <RadioButton
-            android:id="@+id/rbAbsent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Отсутствовал"
-            android:textSize="12sp" />
-
-        <RadioButton
-            android:id="@+id/rbLate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Опоздал"
-            android:textSize="12sp" />
-    </RadioGroup>
-
-</LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp" android:background="@drawable/bg_card">
+<TextView android:id="@+id/tvSubjectName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" android:paddingBottom="4dp"/>
+<RadioGroup android:id="@+id/rgStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+<RadioButton android:id="@+id/rbPresent" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Присутствовал" android:textSize="11sp" android:buttonTint="@color/status_present"/>
+<RadioButton android:id="@+id/rbAbsent" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Отсутствовал" android:textSize="11sp" android:buttonTint="@color/status_absent"/>
+<RadioButton android:id="@+id/rbLate" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Опоздал" android:textSize="11sp" android:buttonTint="@color/status_late"/>
+</RadioGroup></LinearLayout>
