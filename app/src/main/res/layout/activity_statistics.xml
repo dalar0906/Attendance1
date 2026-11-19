@@ -1,10 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.StatisticsActivity">
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout android:id="@+id/main" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical"
+        android:padding="16dp">
+        <Button android:id="@+id/btnStatisticsBack" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="← Назад" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:text="История и статистика посещаемости"
+            android:textSize="22sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="Фильтр по группе" />
+        <Spinner android:id="@+id/spStatisticsGroup" android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:text="Фильтр по студенту" />
+        <Spinner android:id="@+id/spStatisticsStudent" android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button android:id="@+id/btnDateFrom" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="Дата начала: любая" />
+            <Button android:id="@+id/btnDateTo" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="Дата окончания: любая" />
+        </LinearLayout>
+        <Button android:id="@+id/btnResetFilters" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="Сбросить фильтры" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="Сводка"
+            android:textSize="20sp" android:textStyle="bold" />
+        <TextView android:id="@+id/tvStatLessons" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="4dp"
+            android:text="Количество занятий: 0" android:textSize="16sp" />
+        <TextView android:id="@+id/tvStatTotal" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="4dp"
+            android:text="Всего отметок: 0" android:textSize="16sp" />
+        <TextView android:id="@+id/tvStatPresent" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="4dp"
+            android:text="Присутствовали: 0" android:textSize="16sp" />
+        <TextView android:id="@+id/tvStatAbsent" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="4dp"
+            android:text="Отсутствовали: 0" android:textSize="16sp" />
+        <TextView android:id="@+id/tvStatLate" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="4dp"
+            android:text="Опоздали: 0" android:textSize="16sp" />
+        <TextView android:id="@+id/tvStatisticsEmpty" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center"
+            android:padding="20dp"
+            android:text="Нет отметок, подходящих под выбранные фильтры."
+            android:visibility="gone" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="История посещаемости"
+            android:textSize="20sp" android:textStyle="bold" />
+        <TextView android:id="@+id/tvStatisticsHistory" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:paddingTop="8dp"
+            android:textIsSelectable="true" android:textSize="15sp" />
+    </LinearLayout>
+</ScrollView>
